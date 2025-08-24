@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Acompanhar Pedido</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f6f8fb;color:#222;margin:0;padding:20px;text-align:center}
+  .container{max-width:600px;margin:40px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 18px rgba(12,30,60,0.06)}
+  input{width:100%;padding:12px;border-radius:8px;border:1px solid #e6e9ef;box-sizing:border-box;margin-bottom:12px}
+  button{background:#0b69ff;color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;width:100%}
+  .order{margin-top:20px;text-align:left}
+  img.thumb{max-width:100%;margin-top:10px;border-radius:8px}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Consulta de Pedido</h1>
+    <input id="searchCode" placeholder="Digite o código do pedido" />
+    <button id="searchBtn">Consultar</button>
+    <div id="result"></div>
+  </div>
+
+<script>
+function loadOrders(){ return JSON.parse(localStorage.getItem('orders_v1')||'[]'); }
+document.getElementById('searchBtn').addEventListener('click', ()=> {
+  const code = document.getElementById('searchCode').value.trim().toLowerCase();
+  const orders = loadOrders();
+  const order = orders.find(o => o.code.toLowerCase() === code);
+  const result = document.getElementById('result');
+  if(!order){ result.innerHTML = '<p style="color:#a00">Pedido não encontrado.</p>'; return; }
+  result.innerHTML = `
+    <div class="order">
+      <p><strong>Código:</strong> ${order.code}</p>
+      <p><strong>Cliente:</strong> ${order.name}</p>
+      <p><strong>Status:</strong> ${order.status}</p>
+      <p><strong>Descrição:</strong> ${order.description||''}</p>
+      ${order.photo ? `<img src="${order.photo}" class="thumb"/>` : ''}
+    </div>
+  `;
+});
+</script>
+</body>
+</html>
